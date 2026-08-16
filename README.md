@@ -14,12 +14,9 @@
 ---
 
 Construyo aplicaciones de principio a fin: backend, interfaz y base de datos. Vengo de dos
-ciclos superiores de desarrollo consecutivos y de un paso por QA donde aprendí a romper el
-software antes de que lo rompa el usuario.
-
-Desde 2024 llevo **3DAX Studio**, un estudio de diseño y fabricación 3D que monté yo y cuya
-web mantengo en producción. En paralelo desarrollo sistemas de automatización de extremo a
-extremo.
+ciclos superiores de desarrollo y de un paso por QA donde aprendí a romper el software antes
+de que lo rompa el usuario. Ahora desarrollo sistemas de automatización y mantengo en
+producción la web de mi propio estudio 3D.
 
 Me interesan la **automatización**, la **simulación** y la **ciberseguridad**.
 
@@ -37,76 +34,75 @@ Me interesan la **automatización**, la **simulación** y la **ciberseguridad**.
 
 ## 📌 Proyectos
 
-### ⚙️ Generador de webs · *pipeline de automatización de extremo a extremo*
+### ⚙️ Generador de webs
 
-Sistema completo que **identifica negocios locales sin presencia web, les genera un sitio a
-medida y gestiona todo el ciclo comercial** hasta la entrega. Diseñado para funcionar solo:
-la única intervención humana es el contacto con el negocio, y es manual **a propósito**.
+**Pipeline que localiza negocios sin presencia web, les genera un sitio a medida y gestiona el
+ciclo comercial completo.** Funciona solo de punta a punta: la única intervención humana es el
+contacto con el negocio, y es manual a propósito.
 
-**Cómo funciona, de principio a fin:**
+12 módulos Python con **cero dependencias externas**, panel de control propio y sincronización
+multiusuario resuelta sobre Git.
 
-1. **Prospección** — barrido automatizado sobre datos públicos de fichas de negocios locales,
-   con packs de ~100 gremios para recorrer una ciudad entera. El historial de búsquedas evita
-   repetir trabajo: lo consultado hace menos de 14 días se salta solo.
-2. **Puntuación** — cada negocio recibe un **score de 0 a 100** de potencial calculado a partir
-   de reseñas, valoración, teléfono, fotografías y si la ficha está reclamada. El pipeline
-   prioriza solo lo que merece la pena.
-3. **Generación** — construye un prompt personalizado con los datos reales del negocio y genera
-   una web *one-page* mediante LLM, con dirección de arte adaptada a cada gremio: una
-   peluquería y un taller no salen con el mismo diseño.
-4. **Despliegue** — publica una vista previa en Cloudflare Pages, con infraestructura alternativa
-   sobre Raspberry Pi (Caddy + DNS dinámico). La versión definitiva se despliega en el dominio
-   del cliente.
-5. **Comercial** — genera presupuestos imprimibles en A4, **multi-idioma y multi-divisa**
-   (adapta idioma, moneda y fórmula de precio al mercado del negocio), y prepara los mensajes
-   de contacto personalizados.
-6. **Seguimiento** — CRM propio con embudo de estados: `nuevo → web generada → contactado →
-   interesado → vendido`.
+`Python` · `web scraping` · `LLM` · `Cloudflare Pages` · `Raspberry Pi`
 
-**Decisiones técnicas de las que estoy orgulloso:**
+<details>
+<summary><b>Cómo funciona, paso a paso</b></summary>
 
-- **Cero dependencias externas.** Los 12 módulos del pipeline funcionan solo con la librería
-  estándar de Python. Nada que instalar, nada que se rompa al actualizarse.
-- **Panel de control propio** servido en local: tabla de leads en vivo, lanzamiento del rastreo
-  con progreso y log en tiempo real, inspección de prompts y generación de webs con límite de
-  concurrencia.
-- **Trabajo en equipo sin base de datos.** La sincronización va sobre Git: versiona únicamente
-  los datos, integra con *rebase* automático y **fusiona el CRM campo a campo**; ante un
-  conflicto gana el estado más avanzado del embudo, de modo que dos personas pueden trabajar
-  sobre el mismo lead sin perder información.
+<br>
+
+| Fase | Qué hace |
+|---|---|
+| **Prospección** | Barrido automatizado sobre datos públicos de fichas de negocios, con packs de ~100 gremios para recorrer una ciudad entera. Lo consultado hace menos de 14 días se salta solo. |
+| **Puntuación** | Score de 0 a 100 por potencial, calculado con reseñas, valoración, teléfono, fotografías y si la ficha está reclamada. |
+| **Generación** | Prompt construido con los datos reales del negocio y web *one-page* generada mediante LLM, con dirección de arte adaptada a cada gremio. |
+| **Despliegue** | Vista previa en Cloudflare Pages, con infraestructura alternativa sobre Raspberry Pi (Caddy + DNS dinámico). La definitiva va al dominio del cliente. |
+| **Comercial** | Presupuestos A4 imprimibles multi-idioma y multi-divisa, adaptando precio y moneda al mercado del negocio. |
+| **Seguimiento** | CRM propio con embudo: nuevo → web generada → contactado → interesado → vendido. |
+
+</details>
+
+<details>
+<summary><b>Decisiones técnicas</b></summary>
+
+<br>
+
+- **Cero dependencias externas.** Todo el pipeline funciona con la librería estándar de Python.
+  Nada que instalar, nada que se rompa al actualizarse.
+- **Sincronización multiusuario sobre Git, sin base de datos.** Versiona solo los datos, integra
+  con *rebase* automático y fusiona el CRM campo a campo; ante un conflicto gana el estado más
+  avanzado del embudo, así que dos personas pueden trabajar sobre el mismo registro sin perder
+  información.
 - **Idempotencia por diseño.** Todo se fusiona por identificador: relanzar cualquier fase es
   seguro, nunca duplica ni pierde registros.
-- **Cadena de suministro verificada.** La herramienta externa de rastreo se valida por hash
-  SHA-256 contra el publicado por su autor antes de ejecutarse.
+- **Cadena de suministro verificada.** Las herramientas externas se validan por hash SHA-256
+  contra el publicado por su autor antes de ejecutarse.
+- **Panel de control propio** servido en local: leads en vivo, lanzamiento del rastreo con
+  progreso y log en tiempo real, y generación con límite de concurrencia.
 
-`Python` · `arquitectura de pipeline` · `web scraping` · `LLM` · `Cloudflare Pages` · `Raspberry Pi` · `Git como capa de sincronización`
+</details>
 
 > Repositorio privado por contener datos comerciales de terceros.
 
 ### 🌐 3DAX Studio · [3daxstudio.com](https://3daxstudio.com)
 
-Tienda online de piezas diseñadas y fabricadas en 3D. **Programada a mano de principio a
-fin**: backend, frontend y diseño de la base de datos relacional. En producción con clientes
-reales desde 2024, con mantenimiento evolutivo continuo. Compagino en ella los tres papeles:
-desarrollo, diseño de producto y atención al cliente.
+Tienda online de piezas diseñadas y fabricadas en 3D. **Programada a mano de principio a fin**:
+backend, frontend y base de datos relacional. En producción con clientes reales desde 2024.
 
 `HTML5` · `CSS3` · `JavaScript` · `SQL`
 
-> El código es privado por tratarse de un negocio en explotación. La web está viva y se puede visitar.
+> Código privado por tratarse de un negocio en explotación. La web está viva y se puede visitar.
 
 ### 📊 Comparador de precios multi-tienda · *TFG del ciclo DAM*
 
-Aplicación web que rastrea precios de productos en varias tiendas online, ejecuta búsquedas
-sobre el catálogo completo y genera gráficos y estadísticas comparativas a partir de los datos
-recogidos.
+Aplicación web que rastrea precios en varias tiendas online, busca sobre el catálogo completo y
+genera gráficos y estadísticas comparativas.
 
 `Python` · `Flask` · `React` · `scraping web`
 
 ### 🔍 Automatización de QA · *Grupo Fractalia*
 
-Validación de software entre entornos de desarrollo y producción, automatización de la
-extracción de elementos web con Python y Selenium, y análisis de seguridad de aplicaciones
-con Acunetix para detectar fallos antes de publicar.
+Validación de software entre entornos, automatización de la extracción de elementos web con
+Python y Selenium, y análisis de seguridad con Acunetix para detectar fallos antes de publicar.
 
 `Python` · `Selenium` · `Acunetix`
 
